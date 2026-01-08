@@ -101,15 +101,15 @@ docmd_foreach()
 	#showcmd "$@"
 	shift
 	for pkg in "$@" ; do
-		docmd $cmd $pkg
+		docmd "$cmd" "$pkg"
 	done
 }
 
 # Print command line and run command line with SUDO
 sudocmd()
 {
-	showcmd "$SUDO $@"
-	$SUDO "$@"
+	showcmd "$SUDO $*"
+	"$SUDO" "$@"
 }
 
 # Run every arg with sudocmd
@@ -120,7 +120,7 @@ sudocmd_foreach()
 	#showcmd "$@"
 	shift
 	for pkg in "$@" ; do
-		sudocmd $cmd $pkg
+		sudocmd "$cmd" "$pkg"
 	done
 }
 
