@@ -5,7 +5,7 @@
 .\" This file has been put into the public domain.
 .\" You can do whatever you want with this file.
 .\"
-.TH ERC 1 "August 2015" "Version 0.7"
+.TH ERC 1 "March 2026" "Version @VERSION@"
 
 .SH NAME
 erc \- a universal archive tool
@@ -19,31 +19,110 @@ erc \- a universal archive tool
 .br
 .SH DESCRIPTION
 .BI
-ERC is implemented as wrapper against patool.
-Just use it as any of popular command line archive tools.
+ERC is a universal command-line archive manager that provides a unified interface
+for working with various archive formats. It uses patool as the primary backend,
+with 7z as a fallback when patool is not available.
+.PP
+When extracting, erc decides where to place files:
+.IP \(bu 2
+Single file in archive \(em extracted to the current directory.
+.IP \(bu 2
+Single directory in archive \(em renamed to match the archive basename.
+.IP \(bu 2
+Multiple files or directories \(em extracted into a subdirectory named after the archive.
+.PP
+Use
+.B erc basename
+to see the predicted directory name for an archive.
 
-Please use erc --help to get detail command explain.
+.SH COMMANDS
+.TP
+.B a, create, pack, add
+Create archive or add files to archive.
+.TP
+.B x, extract, unpack
+Extract files from archive.
+.TP
+.B l, list
+List archive contents.
+.TP
+.B t, test, check
+Test archive integrity.
+.TP
+.B type
+Print archive type.
+.TP
+.B basename
+Print the predicted directory name for the archive.
+.TP
+.B repack, conv
+Convert archive to another format.
+.TP
+.B formats
+List supported archive formats.
+.TP
+.B b, bench, benchmark
+Run CPU benchmark.
+.TP
+.B diff
+Compare two archives (requires patool).
+.TP
+.B search, grep
+Search in archive files (requires patool).
+.PP
+Commands can also be used with a dash prefix: \fB\-a\fR, \fB\-x\fR, \fB\-l\fR, \fB\-t\fR, \fB\-b\fR.
+
 .SH OPTIONS
 .TP
-.I -h
-Display help
+.B \-h, \-\-help
+Display help.
 .TP
-.I -V
-Show version and exit
+.B \-V, \-\-version
+Show version and exit.
 .TP
-.I -q
-Quiet mode
+.B \-q, \-\-quiet
+Quiet mode.
 .TP
-.I -f
-force override target
+.B \-f, \-\-force
+Force override target.
+.TP
+.B \-C DIR
+Extract to specified directory. The directory is created if it does not exist.
+.TP
+.B \-\-directory DIR, \-\-extract\-to DIR, \-\-destination DIR, \-\-outdir DIR
+Same as \fB\-C\fR. Long options also accept \fB=\fR syntax (e.g. \fB\-\-directory=DIR\fR).
+.TP
+.B \-\-here, \-\-no\-subdir
+Extract to current directory (or \fB\-C\fR directory) without creating a subdirectory.
+.TP
+.B \-j, \-\-flat, \-\-junk\-paths
+Extract all files without directory structure (strip paths).
+.TP
+.B \-\-use\-patool
+Force use patool as backend.
+.TP
+.B \-\-use\-7z
+Force use 7z as backend.
+
 .SH EXAMPLES
- # erc a archive.zip file(s)... - pack files to archive.zip
- # erc file(s)...  zip: - pack file(s) to zip archive
- # erc [x] archive.zip - unpack archive to the current dir
- # erc l archive.zip - list files of the archive
- # erc [repack] archive1.zip... archive2.rar 7z: - repack all to 7z
- # erc [repack] archive.zip archive.7z - repack zip to 7z
- # erc -f repack archive.zip archive.7z - repack zip to 7z (override archive.7z in any way)
+ # erc a archive.zip file(s)... \- pack files to archive.zip
+ # erc file(s)... zip: \- pack file(s) to zip archive
+ # erc dir \- pack directory to dir.zip
+ # erc [x] archive.zip \- unpack archive
+ # erc \-C dir archive.zip \- extract directly into dir
+ # erc \-\-here archive.zip \- extract without creating subdirectory
+ # erc \-\-flat archive.zip \- extract all files stripping paths
+ # erc l archive.zip \- list files of the archive
+ # erc [repack] archive1.zip 7z: \- repack to 7z
+ # erc [repack] archive.zip archive.7z \- repack zip to 7z
+ # erc \-f repack archive.zip archive.7z \- repack (override target)
+ # erc basename archive.tar.gz \- print predicted directory name
+ # erc type archive.zip \- print archive type
+
+.SH ENVIRONMENT
+.TP
+.B ERC_BACKEND
+Set to \fBpatool\fR or \fB7z\fR to force a specific backend.
 
 .SH BUGS
 Please report any bugs to lav@etersoft.ru
