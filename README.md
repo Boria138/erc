@@ -28,6 +28,7 @@ apt-get install erc
 | `l`, `list` | List archive contents |
 | `t`, `test`, `check` | Test archive integrity |
 | `type` | Print archive type |
+| `basename` | Print predicted directory name for archive |
 | `repack`, `conv` | Convert archive to another format |
 | `formats` | List supported formats |
 | `b`, `bench`, `benchmark` | Run CPU benchmark |
@@ -45,10 +46,27 @@ Commands can also be used with a dash prefix: `-a`, `-x`, `-l`, `-t`, `-b`.
 | `-q`, `--quiet` | Quiet mode |
 | `-f`, `--force` | Overwrite existing files |
 | `-C DIR`, `--directory DIR` | Extract to specified directory |
+| `--here`, `--no-subdir` | Extract as-is without creating a subdirectory |
+| `--flat`, `-j`, `--junk-paths` | Extract all files stripping directory structure |
 | `--use-patool` | Force patool backend |
 | `--use-7z` | Force 7z backend |
 
-Also supported as aliases: `--extract-to`, `--destination`, `--outdir`. Long options accept `=` syntax.
+Also supported as aliases for `-C`: `--extract-to`, `--destination`, `--outdir`. Long options accept `=` syntax.
+
+### Extraction Behavior
+
+When extracting an archive, erc decides where to place the files:
+
+- **Single file** in archive — extracted directly to the current directory
+- **Single directory** in archive — renamed to match the archive basename (e.g. `data.zip` containing `src/` extracts as `data/`)
+- **Multiple files or directories** — extracted into a subdirectory named after the archive (e.g. `test.zip` → `test/`)
+
+Use `erc basename archive.tar.gz` to see the predicted directory name.
+
+Modifiers:
+- `--here` / `--no-subdir` — extract as-is without creating a subdirectory
+- `--flat` / `-j` — extract all files stripping directory structure
+- `-C DIR` — extract into the specified directory
 
 ### Examples
 
@@ -66,7 +84,11 @@ erc archive.zip                          # extract (implicit command)
 erc x archive.tar.gz                     # extract with explicit command
 erc -C dir archive.zip                   # extract directly into dir
 erc --directory=dir archive.tar.gz       # same with long option
+erc --here archive.zip                   # extract without creating subdirectory
+erc --flat archive.zip                   # extract all files stripping paths
+erc --flat -C dir archive.zip            # strip paths into target directory
 unerc archive.7z                         # extract using unerc alias
+erc basename archive.tar.gz              # print predicted directory name
 ```
 
 **List and test:**
