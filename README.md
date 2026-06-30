@@ -152,6 +152,7 @@ zip, 7z, tar, tar.gz, tar.bz2, tar.xz, tar.zst, and other 7-zip supported format
 - **exe, dll** - extract resources using 7z
 - **AppImage** - extract using built-in --appimage-extract
 - **squashfs** - extract using 7z
+- **flatpak** - extract, list and test bundles via ostree (requires ostree)
 
 Run `erc formats` for a complete list of supported formats.
 
